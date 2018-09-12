@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
 import React, { Component } from 'react';
-import math from 'mathjs';
-import './App.css';
+
 import Button from './Button';
+import './App.css';
 
 const Display = ({data}) => {
     const str = data.toArray().join('');
@@ -27,10 +27,19 @@ class App extends Component {
   eval = () => {
     const formula = this.state.operations.toArray().join('');
     if (formula) {
-      const result = math.eval(formula);
-      const view = math.format(result, { precision: 14 });
-      this.setState({
-        operations: Immutable.List.of(view),
+      fetch('/api/calculate', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({formula}),
+      })
+      .then(resp => resp.json())
+      .then(({result}) => {
+        this.setState({
+          operations: Immutable.List.of(result),
+        });
       });
     }
   };
