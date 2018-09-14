@@ -4,7 +4,7 @@ import "truffle/Assert.sol";
 import "../contracts/Calculator.sol";
 
 contract CalculatorTest {
-    function testCalculator() {
+    function testCalculator() public {
         int result;
         Calculator calc = new Calculator();
 
