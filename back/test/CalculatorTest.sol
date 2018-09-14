@@ -4,21 +4,17 @@ import "truffle/Assert.sol";
 import "../contracts/Calculator.sol";
 
 contract CalculatorTest {
-    function testTokenize() {
-        Calculator calc = new Calculator();
-        string memory result = calc.tokenizeString("(1 + 2) * 3");
-        Assert.equal(result, "( 1 + 2 ) * 3", "ok");
-    }
-
-    function testPostfix() {
-        Calculator calc = new Calculator();
-        string memory result = calc.toPostfixString("(1 + 2) * 3");
-        Assert.equal(result, "1 2 + 3 *", "ok");
-    }
-
     function testCalculator() {
+        int result;
         Calculator calc = new Calculator();
-        int result = calc.eval("(1 + 2) * 3");
-        Assert.equal(result, 9, "9");
+
+        result = calc.eval("");
+        Assert.equal(result, 0, "result must be 0");
+
+        result = calc.eval("(1 + 2) * 3");
+        Assert.equal(result, 9, "result must be 9");
+
+        result = calc.eval("1 + 2 * 3");
+        Assert.equal(result, 7, "result must be 7");
     }
 }

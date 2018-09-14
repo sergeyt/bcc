@@ -21,52 +21,6 @@ contract Calculator {
         return 0;
     }
 
-    function tokenizeString(string input) public pure returns (string) {
-        bytes memory str = bytes(input);
-        Token[] memory tokens;
-        uint count;
-        
-
-        (tokens, count) = tokenize(str);
-        return tokenString(tokens, count);
-    }
-
-    function toPostfixString(string input) public pure returns (string) {
-        bytes memory str = bytes(input);
-        Token[] memory tokens;
-        uint count;
-
-        (tokens, count) = tokenize(str);
-
-        if (count > 0) {
-            (tokens, count) = toPostfix(tokens, count);
-            return tokenString(tokens, count);
-        }
-
-        return "";
-    }
-
-    function tokenString(Token[] memory tokens, uint count) internal pure returns (string) {
-        string memory result = "";
-        string memory s;
-        for (uint i = 0; i < count; i++) {
-            if (i > 0) {
-                result = strConcat(result, " ");
-            }
-            Token memory tok = tokens[i];
-            if (tok.kind == 0) {
-                s = int2str(tok.val);
-                result = strConcat(result, s);
-            } else {
-                bytes memory b = new bytes(1);
-                b[0] = tok.kind;
-                s = string(b);
-                result = strConcat(result, s);
-            }
-        }
-        return result;
-    }
-
     function tokenize(bytes memory str) internal pure returns (Token[] memory tokens, uint count) {
         tokens = new Token[](str.length);
         count = 0;
@@ -234,51 +188,5 @@ contract Calculator {
             mint *= -1;
         }
         return mint;
-    }
-
-    function int2str(int i) internal pure returns (string) {
-        if (i == 0) return "0";
-        int j = i;
-        uint len;
-        while (j != 0){
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (i != 0){
-            bstr[k--] = byte(48 + i % 10);
-            i /= 10;
-        }
-        return string(bstr);
-    }
-
-    function strConcat(string _a, string _b, string _c, string _d, string _e) internal pure returns (string) {
-        bytes memory _ba = bytes(_a);
-        bytes memory _bb = bytes(_b);
-        bytes memory _bc = bytes(_c);
-        bytes memory _bd = bytes(_d);
-        bytes memory _be = bytes(_e);
-        string memory abcde = new string(_ba.length + _bb.length + _bc.length + _bd.length + _be.length);
-        bytes memory babcde = bytes(abcde);
-        uint k = 0;
-        for (uint i = 0; i < _ba.length; i++) babcde[k++] = _ba[i];
-        for (i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
-        for (i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
-        for (i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
-        for (i = 0; i < _be.length; i++) babcde[k++] = _be[i];
-        return string(babcde);
-    }
-
-    function strConcat(string _a, string _b, string _c, string _d) internal pure returns (string) {
-        return strConcat(_a, _b, _c, _d, "");
-    }
-
-    function strConcat(string _a, string _b, string _c) internal pure returns (string) {
-        return strConcat(_a, _b, _c, "", "");
-    }
-
-    function strConcat(string _a, string _b) internal pure returns (string) {
-        return strConcat(_a, _b, "", "", "");
     }
 }
