@@ -28,6 +28,14 @@ contract Calculator {
 
         for (uint i = 0; i < str.length; i++) {
             bytes1 c = str[i];
+            if (c == "-") {
+                if (i + 1 >= str.length) {
+                    revert("invalid input");
+                }
+                if (str[i + 1] >= 48 && str[i + 1] <= 57) {
+                    continue;
+                }
+            }
             if (c >= 48 && c <= 57) { // digits
                 continue;
             }
