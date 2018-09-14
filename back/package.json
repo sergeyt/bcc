@@ -1,0 +1,21 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "test:coverage": "solidity-coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "truffle": "^4.1.14"
+  },
+  "devDependencies": {
+    "solidity-coverage": "^0.5.11"
+  }
+}
