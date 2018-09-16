@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 import React, { Component } from 'react';
+import { DrizzleContext } from 'drizzle-react';
+import math from 'mathjs';
 
 import Button from './Button';
 import './App.css';
@@ -8,6 +10,8 @@ const Display = ({data}) => {
     const str = data.toArray().join('');
     return <div className="display">{str}</div>;
 };
+
+// TODO display error
 
 class App extends Component {
   state = {
@@ -25,22 +29,14 @@ class App extends Component {
   };
 
   eval = () => {
-    const formula = this.state.operations.toArray().join('');
-    if (formula) {
-      fetch('/api/calculate', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({formula}),
-      })
-      .then(resp => resp.json())
-      .then(({result}) => {
-        this.setState({
-          operations: Immutable.List.of(result),
+    const input = this.state.operations.toArray().join('');
+    if (input) {
+      this.props.eval(input)
+        .then(({result}) => {
+          this.setState({
+            operations: Immutable.List.of(result),
+          });
         });
-      });
     }
   };
   
@@ -76,4 +72,39 @@ class App extends Component {
   }
 }
 
-export default App;
+function mathjsEval(input) {
+  try {
+    const value = math.eval(input);
+    const result = math.format(value, { precision: 14 });
+    return { result };
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+function makeEval(Calculator) {
+  return input => {
+    return Calculator.methods.eval(input).call()
+      .then(value => ({ result: value }))
+      .catch(err => {
+        console.log(err);
+        return mathjsEval(input);
+      });
+  };
+}
+
+export default () => (
+  <DrizzleContext.Consumer>
+    {drizzleContext => {
+      const { drizzle, initialized } = drizzleContext;
+  
+      if (!initialized) {
+        return "Loading...";
+      }
+
+      return (
+        <App eval={makeEval(drizzle.contracts.Calculator)} />
+      );
+    }}
+  </DrizzleContext.Consumer>
+);
