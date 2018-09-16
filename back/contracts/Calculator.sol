@@ -6,6 +6,11 @@ contract Calculator {
         int val;
     }
 
+    /**
+     * Evaluates specified formula given in postfix form.
+     * Supported operations: + - * /
+     * Floating point numbers are not supported yet.
+     */
     function eval(string input) public pure returns (int) {
         bytes memory str = bytes(input);
         Token[] memory tokens;
@@ -21,7 +26,7 @@ contract Calculator {
         return 0;
     }
 
-    function tokenize(bytes memory str) internal pure returns (Token[] memory tokens, uint count) {
+    function tokenize(bytes memory str) private pure returns (Token[] memory tokens, uint count) {
         tokens = new Token[](str.length);
         count = 0;
         uint start = 0;
@@ -62,7 +67,7 @@ contract Calculator {
     }
 
     // ShuntingYard algorithm
-    function toPostfix(Token[] tokens, uint count) internal pure returns (Token[], uint) {
+    function toPostfix(Token[] tokens, uint count) private pure returns (Token[], uint) {
         Token[] memory stack = new Token[](count);
         Token[] memory output = new Token[](count);
         uint stackSize = 0;
@@ -116,22 +121,22 @@ contract Calculator {
         return (output, outputSize);
     }
 
-    function isOperator(bytes1 c) internal pure returns (bool) {
+    function isOperator(bytes1 c) private pure returns (bool) {
         return c == "+" || c == "-" || c == "*" || c == "/";
     }
 
-    function isRightAssociative(bytes1 c) internal pure returns (bool) {
+    function isRightAssociative(bytes1 c) private pure returns (bool) {
         return c == "^";
     }
 
-    function precedence(bytes1 c) internal pure returns (int) {
+    function precedence(bytes1 c) private pure returns (int) {
         if (c == "*" || c == "/") {
             return 3;
         }
         return 2;
     }
 
-    function calculateRPN(Token[] memory tokens, uint count) internal pure returns (int) {
+    function calculateRPN(Token[] memory tokens, uint count) private pure returns (int) {
         int[] memory stack = new int[](count);
         uint stackSize = 0;
         int a;
@@ -176,7 +181,7 @@ contract Calculator {
     }
 
     // adopted from oraclize utils   
-    function parseInt(bytes str, uint start, uint end) internal pure returns (int) {
+    function parseInt(bytes str, uint start, uint end) private pure returns (int) {
         int mint = 0;
         bool negative = false;
         for (uint i = start; i < end; i++) {
