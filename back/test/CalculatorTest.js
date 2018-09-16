@@ -39,5 +39,6 @@ contract("Calculator", accounts => {
         await tryCatch(calc.eval('abc'));
         await tryCatch(calc.eval('(1+2'));
         await tryCatch(calc.eval('1+2)'));
+        await tryCatch(calc.eval('1+2.1'));
     });
 });
