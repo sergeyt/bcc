@@ -23,6 +23,10 @@ class App extends Component {
   };
 
   push = (val) => () => {
+    const last = this.state.operations.last();
+    if (val === '.' && last === '.') {
+      return;
+    }
     this.setState({
       operations: this.state.operations.push(val),
     });
