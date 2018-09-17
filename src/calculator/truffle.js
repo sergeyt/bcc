@@ -16,10 +16,23 @@ module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
   networks: {
+    // ganache
     development: {
+      network_id: '*',
       host: 'localhost',
-      port: 7545,
-      network_id: '*'
+      port: 7545
+    },
+    ropsten: {
+      network_id: '3',
+      host: 'localhost',
+      port: 8545,
+      gas: 4700000
+    },
+    kovan: {
+      network_id: '42',
+      host: 'localhost',
+      port: 8545,
+      gas: 4700000,
     }
   }
 };
