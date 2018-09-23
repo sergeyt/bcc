@@ -12,7 +12,7 @@ contract Calculator {
      * Floating point numbers are not supported yet.
      */
     function eval(string input) public pure returns (int) {
-        bytes memory str = bytes(input);
+        bytes memory str = strip(bytes(input));
         Token[] memory tokens;
         uint count;
 
@@ -37,7 +37,7 @@ contract Calculator {
                 if (i + 1 >= str.length) {
                     revert("invalid input");
                 }
-                if (str[i + 1] >= 48 && str[i + 1] <= 57) {
+                if (str[i + 1] >= 48 && str[i + 1] <= 57 && !(str[i - 1] >= 48 && str[i - 1] <= 57)) {
                     continue;
                 }
             }
@@ -50,11 +50,6 @@ contract Calculator {
                 }
                 tokens[count++] = Token(c, 0);
                 start = i + 1;
-            } else if (c == 32) { // space
-                if (start != i) {
-                    tokens[count++] = Token(0, parseInt(str, start, i));
-                }
-                start = i + 1;
             } else {
                 revert("unexpected char");
             }
@@ -64,6 +59,24 @@ contract Calculator {
         }
 
         return (tokens, count);
+    }
+
+    function strip(bytes memory str) private pure returns (bytes memory result) {
+        uint len = 0;
+        uint i;
+        uint j;
+        for (i = 0; i < str.length; i++) {
+            if (str[i] != 32) {
+                len++;
+            }
+        }
+        result = new bytes(len);
+        for (i = 0; i < str.length; i++) {
+            if (str[i] != 32) {
+                result[j++] = str[i];
+            }
+        }
+        return result;
     }
 
     // ShuntingYard algorithm

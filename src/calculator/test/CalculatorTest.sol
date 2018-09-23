@@ -17,7 +17,13 @@ contract CalculatorTest {
         result = calc.eval("1 + 2 * 3");
         Assert.equal(result, 7, "result must be 7");
 
-        result = calc.eval("1 + -2 * 3");
+        result = calc.eval("1 + - 2 * 3");
+        Assert.equal(result, -5, "result must be -5");
+
+        result = calc.eval("1 - 2");
+        Assert.equal(result, -1, "result must be -1");
+
+        result = calc.eval("1 - 2 * 3");
         Assert.equal(result, -5, "result must be -5");
     }
 }
